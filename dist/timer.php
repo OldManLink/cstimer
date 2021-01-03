@@ -20,7 +20,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
   <link rel="apple-touch-icon" href="cstimer512x512.png">
   <link rel="manifest" href="cstimer.webmanifest">
-<?php include('lang/langDet.php');?>
+<?php $lang=''; include('lang/langDet.php');?>
   <link rel='stylesheet' type='text/css' href='css/style.css'>
   <script type="text/javascript" src="js/jquery.min.js"></script>
   <script type="text/javascript" src="js/cstimer.js"></script>

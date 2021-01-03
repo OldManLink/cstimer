@@ -84,14 +84,20 @@ twisty = $(dest)/js/twisty.js
 css = $(addprefix $(dest)/css/, $(shell ls $(src)/css))
 langJS = $(addprefix $(dest)/lang/, $(shell ls $(src)/lang/ | grep .*\.js))
 langPHP = $(addprefix $(dest)/lang/, $(shell ls $(src)/lang/ | grep .*\.php))
+local = $(shell find $(dest)/local -type f | grep -v "/\.")
 
 all: $(cstimer) $(twisty) $(css) $(langJS) $(langPHP) $(dest)/cache.manifest $(dest)/sw.js
 
 clean:
-	rm -f $(cstimer) $(twisty) $(css) $(langJS) $(langPHP)
+	rm -f $(cstimer) $(twisty) $(css) $(langJS) $(langPHP) $(local)
 
 local: all
 	php $(dest)/timer.php | sed "s/ manifest=\"cache\.manifest\"//g" > $(dest)/local/timer.html
+	cp $(dest)/cstimer.webmanifest $(dest)/local/cstimer.webmanifest
+	cp $(dest)/cstimer512x512.png $(dest)/local/cstimer512x512.png
+	cp $(dest)/sw.js $(dest)/local/sw.js
+	cp $(dest)/cache.manifest $(dest)/local/cache.manifest
+	cp $(dest)/js/jquery.min.js $(dest)/local/js/jquery.min.js
 	cp $(dest)/js/cstimer.js $(dest)/local/js/cstimer.js
 	cp $(dest)/js/twisty.js $(dest)/local/js/twisty.js
 	cp $(dest)/css/style.css $(dest)/local/css/style.css
@@ -118,13 +124,13 @@ $(langJS): $(dest)/lang/%: $(src)/lang/%
 
 $(dest)/cache.manifest: $(cache)
 	@echo $@
-	@sed -i '$$d' $@
+	@sed -i '' '$$d' $@
 	@echo -n \# MD5= >> $@
 	@cat $(cache) | md5sum | awk '{print $$1}' >> $@
 
 $(dest)/sw.js: $(cache)
 	@echo $@
-	@sed -i '$$d' $@
+	@sed -i '' '$$d' $@
 	@echo 'var CACHE_NAME = "cstimer_cache_'`cat $(cache) | md5sum | awk '{print $$1}'`'";' >> $@
 
 .PHONY: all
